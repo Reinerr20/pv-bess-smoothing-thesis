@@ -1,3 +1,2 @@
-# PV-BESS Smoothing Thesis
-
+# pv-bess-smoothing-thesis
 repo for my skripshit
