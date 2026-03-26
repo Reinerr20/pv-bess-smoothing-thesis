@@ -1,0 +1,39 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Raw data and intermediate CSVs
+Data PV.csv
+daily_indicators.csv
+recommended_days.csv
+
+# Generated figures in root
+fig_selection_hist_abs_ramp.png
+fig_selection_scatter_all_days.png
+fig_selection_timeseries.png
+
+# Output folders
+outputs_baseline_compare/
+outputs_baseline_ema/
+outputs_baseline_sma/
+outputs_compare_sma_ema/
+outputs_level2/
+
+# Generic generated files
+*.log
