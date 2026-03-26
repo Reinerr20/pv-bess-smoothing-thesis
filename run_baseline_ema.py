@@ -66,6 +66,13 @@ def load_and_preprocess_pv(csv_path: str) -> pd.DataFrame:
 def load_recommended_days(path: str) -> pd.DataFrame:
     rec = pd.read_csv(path)
     rec["date"] = pd.to_datetime(rec["date"]).dt.date
+
+    rec = rec[rec["label"].isin(["clear", "medium", "cloudy"])].copy()
+
+    order = {"clear": 0, "medium": 1, "cloudy": 2}
+    rec["label_order"] = rec["label"].map(order)
+    rec = rec.sort_values(["label_order", "date"]).drop(columns="label_order")
+
     return rec[["label", "date"]]
 
 

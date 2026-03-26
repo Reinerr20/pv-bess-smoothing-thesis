@@ -82,30 +82,41 @@ def compute_daily_indicators(
 
         # Definisikan window siang
         if cfg.use_threshold_window:
-            # threshold = frac * puncak harian (abaikan NaN)
             day_max = np.nanmax(s.values) if np.isfinite(np.nanmax(s.values)) else np.nan
             if not np.isfinite(day_max) or day_max <= 0:
-                continue  # hari kosong
+                continue
+
             thr = cfg.threshold_frac * day_max
-            win = s[s > thr]
+
+            # titik evaluasi utama tetap sesuai definisi active PV window
+            active_mask = s > thr
+            active_idx = s.index[active_mask.fillna(False)]
+
+            if len(active_idx) == 0:
+                continue
+
+            # untuk energy & ramp -> tetap pakai titik yang memenuhi threshold
+            win = s[active_mask]
+
+            # untuk quality check -> pakai span kontigu active period
+            span = s.loc[active_idx.min():active_idx.max()]
+
         else:
             start = pd.to_datetime(f"{day} {cfg.day_start}")
             end = pd.to_datetime(f"{day} {cfg.day_end}")
-            win = s[(s.index >= start) & (s.index <= end)]
+            span = s[(s.index >= start) & (s.index <= end)]
+            win = span
 
-        n_total = len(win)
+        n_total = len(span)
         if n_total == 0:
             continue
 
-        missing_frac = win.isna().mean()
-        n_valid = win.notna().sum()
+        missing_frac = span.isna().mean()
+        n_valid = span.notna().sum()
 
-        # Kalau valid terlalu sedikit, skip
         if n_total < cfg.min_points_window:
-            # window terlalu pendek -> skip
             continue
 
-        # Hitung metrik hanya pada data valid
         win_valid = win.dropna()
         if len(win_valid) < cfg.min_points_window:
             continue
@@ -113,17 +124,13 @@ def compute_daily_indicators(
         # Energy (kWh) = sum(P_kW * dt_h)
         E_day_kWh = float((win_valid.clip(lower=0) * dt_h).sum())
 
-        # Ramp P95 (kW per 5 min) dari smoothness metric
+        # Ramp P95
         ramp = win_valid.diff()
         P95_abs_ramp = float(np.nanpercentile(np.abs(ramp.values), 95))
 
-        # Zero streak (untuk outage detection) pada window fixed / threshold
-        # Definisi "zero" di sini = <= 0.01*max_hari agar robust noise
-        day_max2 = np.nanmax(s.values) if np.isfinite(np.nanmax(s.values)) else 0.0
-        zero_thr = 0.01 * day_max2
-        # Buat mask berdasarkan win (bukan win_valid) supaya missing ikut kebaca terpisah
-        win_for_streak = win.copy()
-        zero_mask = (win_for_streak.fillna(-999) <= zero_thr).to_numpy()
+        # Zero streak: hitung pada span aktif, tapi missing jangan dihitung sebagai nol
+        zero_thr = 0.01 * day_max
+        zero_mask = span.fillna(np.inf).to_numpy() <= zero_thr
         zero_streak_pts = longest_true_streak(zero_mask)
 
         rows.append({
