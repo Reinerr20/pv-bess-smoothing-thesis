@@ -40,7 +40,7 @@ EMA_WINDOWS = {
 }
 
 # windows shown in time-series plot
-PLOT_WINDOWS = ["10min", "30min", "60min"]
+PLOT_WINDOWS = ["10min", "20min", "30min", "60min"]
 
 # =========================
 # DATA LOADING & PREPROCESS
@@ -116,7 +116,11 @@ def throughput_kwh(pbatt: pd.Series) -> float:
 # =========================
 
 def plot_raw_vs_smoothed(day_df: pd.DataFrame, label: str, day_str: str, smoothed: Dict[str, pd.Series]):
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    pv_day = day_df["Ppv_kw"]
+    mask = active_window_mask(pv_day)
+    active_idx = pv_day.index[mask]
 
     ax.plot(day_df.index, day_df["Ppv_kw"], label="Ppv_raw")
 
@@ -127,10 +131,27 @@ def plot_raw_vs_smoothed(day_df: pd.DataFrame, label: str, day_str: str, smoothe
     ax.set_title(f"Raw vs Smoothed (EMA) — {label} — {day_str}")
     ax.set_xlabel("Time (HH:MM)")
     ax.set_ylabel("Power (kW)")
-    ax.legend()
 
-    ax.xaxis.set_major_locator(mdates.HourLocator(interval=2))
+    if len(active_idx) > 0:
+        ax.set_xlim(active_idx.min(), active_idx.max())
+
+    ax.xaxis.set_major_locator(mdates.HourLocator(interval=1))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
+    ax.grid(True, alpha=0.3)
+
+    handles, labels = ax.get_legend_handles_labels()
+    ax.legend(
+        handles,
+        labels,
+        loc="upper right",
+        bbox_to_anchor=(0.999, 0.999),
+        fontsize=6.5,
+        framealpha=0.9,
+        ncol=1,
+        borderaxespad=0.2,
+        labelspacing=0.3,
+        handlelength=1.8,
+    )
 
     fig.autofmt_xdate()
     fig.tight_layout()
@@ -138,7 +159,6 @@ def plot_raw_vs_smoothed(day_df: pd.DataFrame, label: str, day_str: str, smoothe
     out = os.path.join(OUT_DIR, f"raw_vs_smoothed_EMA_{label}_{day_str}.png")
     fig.savefig(out, dpi=200)
     plt.close(fig)
-
 
 # =========================
 # NEW: EXPORT PROFILES (for Level-2)
@@ -206,6 +226,9 @@ def main():
         pv_day = day_df["Ppv_kw"]
         mask = active_window_mask(pv_day)
 
+        raw_eval = pv_day[mask].dropna()
+        raw_ramp_p95 = ramp_p95_kw(raw_eval)
+
         smoothed_map = {}
 
         for name, N in EMA_WINDOWS.items():
@@ -225,8 +248,14 @@ def main():
                 "param_name": "alpha",
                 "param_value": alpha,
                 "window_name": name,
+                "raw_ramp_p95_kw": raw_ramp_p95,
                 "ramp_p95_kw": ramp_p95_kw(ps_eval),
                 "throughput_kwh": throughput_kwh(pb_eval),
+                "ramp_reduction_pct": (
+                    100.0 * (raw_ramp_p95 - ramp_p95_kw(ps_eval)) / raw_ramp_p95
+                    if pd.notna(raw_ramp_p95) and raw_ramp_p95 > 0 and pd.notna(ramp_p95_kw(ps_eval))
+                    else np.nan
+                ),
                 "energy_day_kwh_active_window": float(pv_day[mask].sum() * DT_HOURS),
                 "n_points_active_window": int(mask.sum()),
             })

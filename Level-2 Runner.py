@@ -165,10 +165,10 @@ def simulate_bess_constraints(
 
     for i, t in enumerate(pv.index):
         preq = pbatt_req.loc[t]
-        soc.loc[t] = soc_state
 
         if not np.isfinite(preq):
             pbatt_act.loc[t] = np.nan
+            soc.loc[t] = soc_state
             continue
 
         # 1) power clip
@@ -189,7 +189,8 @@ def simulate_bess_constraints(
             soc_next = soc_state - (pact * DT_HR) / ecap_kwh
 
         pbatt_act.loc[t] = pact
-        soc_state = soc_next  # update state for next step
+        soc.loc[t] = soc_next
+        soc_state = soc_next
 
     pout_act = pv + pbatt_act
     return pbatt_req, pbatt_act, soc, pout_act
@@ -511,4 +512,4 @@ print(f"Saved cycles detail   : {CYCLES_DETAIL_CSV}")
 print(f"Saved example plots   : {PLOTS_DIR}")
 
 # Quick sanity print
-print("\nNOTE: N(DoD) table is currently PLACEHOLDER. Replace DOD_POINTS/N_CYCLES_POINTS with values from your reference.")
+print("\nNOTE: N(DoD) uses Wang2011-derived reference points at 25°C, C/2, for relative comparison only.")

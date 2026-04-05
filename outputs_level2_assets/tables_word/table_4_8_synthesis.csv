@@ -1,0 +1,7 @@
+Day,Scenario,Best mismatch case,Best mismatch,Worst mismatch case,Worst mismatch,Dominant bottleneck
+clear (2024-06-05),small,SMA 10min,0.0,SMA 60min,1541.264,SoC limit
+clear (2024-06-05),large,SMA 10min,0.0,SMA 60min,0.0,Mixed
+medium (2025-03-15),small,EMA 10min,0.0,SMA 60min,1367.868,Power limit
+medium (2025-03-15),large,SMA 10min,0.0,SMA 60min,2.493,Power limit
+cloudy (2024-04-03),small,EMA 10min,387.17,SMA 60min,4782.972,Power limit
+cloudy (2024-04-03),large,EMA 10min,0.0,SMA 60min,585.944,Power limit

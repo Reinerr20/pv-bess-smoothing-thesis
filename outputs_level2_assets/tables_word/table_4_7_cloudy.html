@@ -1,0 +1,233 @@
+<html><head>
+    <style>
+        body { font-family: Calibri, Arial, sans-serif; margin: 24px; }
+        h3 { margin-bottom: 12px; }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 11pt;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 6px 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #D9EAF7;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #F8FBFD;
+        }
+    </style>
+    </head><body><h3>Table 4.7. Level-2 results for cloudy day</h3><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Method</th>
+      <th>Window</th>
+      <th>Scenario</th>
+      <th>RampP95 target</th>
+      <th>RampP95 actual</th>
+      <th>Throughput_req</th>
+      <th>Throughput_act</th>
+      <th>Mismatch</th>
+      <th>f_p</th>
+      <th>f_soc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SMA</td>
+      <td>10min</td>
+      <td>small</td>
+      <td>1283.425</td>
+      <td>1971.5</td>
+      <td>3754.833</td>
+      <td>2145.458</td>
+      <td>1609.375</td>
+      <td>0.259</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>EMA</td>
+      <td>10min</td>
+      <td>small</td>
+      <td>1631.034</td>
+      <td>1953.729</td>
+      <td>2359.443</td>
+      <td>1972.273</td>
+      <td>387.17</td>
+      <td>0.147</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>SMA</td>
+      <td>20min</td>
+      <td>small</td>
+      <td>698.037</td>
+      <td>1886.0</td>
+      <td>5458.583</td>
+      <td>3078.438</td>
+      <td>2380.146</td>
+      <td>0.336</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>EMA</td>
+      <td>20min</td>
+      <td>small</td>
+      <td>855.149</td>
+      <td>1887.133</td>
+      <td>4366.951</td>
+      <td>2910.928</td>
+      <td>1456.023</td>
+      <td>0.301</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>SMA</td>
+      <td>30min</td>
+      <td>small</td>
+      <td>479.008</td>
+      <td>1886.0</td>
+      <td>6227.208</td>
+      <td>3270.458</td>
+      <td>2956.75</td>
+      <td>0.357</td>
+      <td>0.161</td>
+    </tr>
+    <tr>
+      <td>EMA</td>
+      <td>30min</td>
+      <td>small</td>
+      <td>578.284</td>
+      <td>1886.0</td>
+      <td>5430.675</td>
+      <td>3134.139</td>
+      <td>2296.536</td>
+      <td>0.336</td>
+      <td>0.224</td>
+    </tr>
+    <tr>
+      <td>SMA</td>
+      <td>60min</td>
+      <td>small</td>
+      <td>236.967</td>
+      <td>1891.504</td>
+      <td>8342.521</td>
+      <td>3559.549</td>
+      <td>4782.972</td>
+      <td>0.51</td>
+      <td>0.231</td>
+    </tr>
+    <tr>
+      <td>EMA</td>
+      <td>60min</td>
+      <td>small</td>
+      <td>290.295</td>
+      <td>1886.0</td>
+      <td>7491.932</td>
+      <td>3428.979</td>
+      <td>4062.952</td>
+      <td>0.455</td>
+      <td>0.266</td>
+    </tr>
+    <tr>
+      <td>SMA</td>
+      <td>10min</td>
+      <td>large</td>
+      <td>1283.425</td>
+      <td>1283.425</td>
+      <td>3754.833</td>
+      <td>3742.25</td>
+      <td>12.583</td>
+      <td>0.014</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>EMA</td>
+      <td>10min</td>
+      <td>large</td>
+      <td>1631.034</td>
+      <td>1631.034</td>
+      <td>2359.443</td>
+      <td>2359.443</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>SMA</td>
+      <td>20min</td>
+      <td>large</td>
+      <td>698.037</td>
+      <td>691.387</td>
+      <td>5458.583</td>
+      <td>5245.458</td>
+      <td>213.125</td>
+      <td>0.063</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>EMA</td>
+      <td>20min</td>
+      <td>large</td>
+      <td>855.149</td>
+      <td>855.149</td>
+      <td>4366.951</td>
+      <td>4359.756</td>
+      <td>7.195</td>
+      <td>0.014</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>SMA</td>
+      <td>30min</td>
+      <td>large</td>
+      <td>479.008</td>
+      <td>544.825</td>
+      <td>6227.208</td>
+      <td>5939.542</td>
+      <td>287.667</td>
+      <td>0.063</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>EMA</td>
+      <td>30min</td>
+      <td>large</td>
+      <td>578.284</td>
+      <td>578.284</td>
+      <td>5430.675</td>
+      <td>5360.267</td>
+      <td>70.408</td>
+      <td>0.028</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>SMA</td>
+      <td>60min</td>
+      <td>large</td>
+      <td>236.967</td>
+      <td>644.0</td>
+      <td>8342.521</td>
+      <td>7756.576</td>
+      <td>585.944</td>
+      <td>0.126</td>
+      <td>0.014</td>
+    </tr>
+    <tr>
+      <td>EMA</td>
+      <td>60min</td>
+      <td>large</td>
+      <td>290.295</td>
+      <td>467.414</td>
+      <td>7491.932</td>
+      <td>7264.408</td>
+      <td>227.523</td>
+      <td>0.077</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table></body></html>

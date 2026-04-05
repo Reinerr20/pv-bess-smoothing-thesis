@@ -1,0 +1,3 @@
+Method,RampP95 target,RampP95 actual,Throughput_req,Throughput_act,Mismatch,f_p,f_soc
+SMA,236.967,1891.504,8342.521,3559.549,4782.972,0.51,0.231
+EMA,290.295,1886.0,7491.932,3428.979,4062.952,0.455,0.266
