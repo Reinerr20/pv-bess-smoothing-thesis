@@ -1,0 +1,4 @@
+Hari,Kandidat damage minimum,Nilai damage minimum,Kandidat damage maksimum,Nilai damage maksimum,Pola utama
+clear (2024-06-05),SMA 60min large,0.000189,SMA 10min large,0.000599,Damage relatif paling rendah; horizon besar cenderung menurunkan damage.
+medium (2025-03-15),SMA 60min large,0.000278,SMA 10min small,0.000785,Damage cenderung turun saat horizon membesar; pengaruh metode tetap bergantung konteks.
+cloudy (2024-04-03),SMA 60min small,0.000457,SMA 10min small,0.000814,Damage relatif paling tinggi; constraint paling terasa dan damage tidak identik dengan throughput.

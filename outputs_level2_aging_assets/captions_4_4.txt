@@ -1,0 +1,9 @@
+Gambar 4.9 Pengaruh horizon smoothing terhadap damage index relatif (baris atas) dan jumlah siklus total hasil rainflow counting (baris bawah) pada hari clear, medium, dan cloudy untuk skenario small dan large BESS.
+
+Gambar 4.10 Perbandingan profil SoC_actual dan distribusi cycle count terhadap DoD bin untuk SMA dan EMA pada hari cloudy, horizon 60 menit, dan skenario small BESS.
+
+Gambar 4.11 Hubungan antara throughput aktual baterai dan damage index relatif pada seluruh kombinasi metode, horizon smoothing, hari representatif, dan skenario BESS.
+
+Tabel 4.10 Ringkasan metrik feasibility dan aging untuk kasus representatif mekanisme pada hari cloudy, horizon 60 menit, dan skenario small BESS.
+
+Tabel 4.11 Ringkasan pola utama aging proxy lintas hari representatif.
