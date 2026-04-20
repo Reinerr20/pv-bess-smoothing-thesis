@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 
 # ====== CONFIG ======
@@ -57,7 +58,7 @@ def apply_day_window(P_day: pd.Series) -> pd.Series:
 
 def plot_timeseries_three_days(P_all: pd.Series, rec: pd.DataFrame):
     # urutkan label biar rapi
-    order = ["clear", "cloudy", "medium"]
+    order = ["clear", "medium", "cloudy"]
     rec = rec.set_index("label").loc[order].reset_index()
 
     plt.figure(figsize=(10, 8))
@@ -71,12 +72,20 @@ def plot_timeseries_three_days(P_all: pd.Series, rec: pd.DataFrame):
 
         ax = plt.subplot(3, 1, i)
         ax.plot(P_win.index, P_win.values)
+
         ax.set_title(f"Raw PV Power — {label.upper()} day ({day})")
         ax.set_ylabel("kW")
+
+        # Show time only on x-axis
+        ax.xaxis.set_major_locator(mdates.HourLocator(interval=2))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
+        ax.tick_params(axis="x", rotation=0)
+
         if i == 3:
             ax.set_xlabel("Time")
         else:
             ax.set_xlabel("")
+
         ax.grid(True, alpha=0.3)
 
     plt.tight_layout()
@@ -87,10 +96,16 @@ def plot_timeseries_three_days(P_all: pd.Series, rec: pd.DataFrame):
 
 def plot_hist_abs_ramp(rec: pd.DataFrame, P_all: pd.Series):
     # histogram |ΔP| untuk 3 hari
-    order = ["clear", "cloudy", "medium"]
+    order = ["clear", "medium", "cloudy"]
     rec = rec.set_index("label").loc[order].reset_index()
 
     plt.figure(figsize=(10, 5))
+
+    hist_colors = {
+        "clear": "tab:green",
+        "medium": "tab:orange",
+        "cloudy": "tab:red",
+    }
 
     for row in rec.itertuples(index=False):
         label = row.label
@@ -103,7 +118,15 @@ def plot_hist_abs_ramp(rec: pd.DataFrame, P_all: pd.Series):
         abs_dP = np.abs(dP.values)
 
         # plot histogram normalized (density)
-        plt.hist(abs_dP, bins=60, density=True, alpha=0.5, label=f"{label} ({day})")
+        plt.hist(
+            abs_dP,
+            bins=60,
+            density=True,
+            alpha=0.45,
+            color=hist_colors.get(label, None),
+            edgecolor="none",
+            label=f"{label} ({day})",
+        )
 
     plt.xlabel(f"|ΔP| (kW per {FREQ_MIN} min)")
     plt.ylabel("Density")
@@ -123,15 +146,39 @@ def plot_scatter_all_days_with_highlight():
     rec = pd.read_csv(RECOMMENDED_FILE)
     rec["date"] = pd.to_datetime(rec["date"], errors="coerce")
 
+    order = ["clear", "medium", "cloudy"]
+    rec["label"] = pd.Categorical(rec["label"], categories=order, ordered=True)
+    rec = rec.sort_values("label")
+
     plt.figure(figsize=(7, 6))
     # all days
     plt.scatter(daily["P95_abs_ramp_kW"], daily["E_day_kWh"], alpha=0.4, label="All days")
 
     # highlight selected
-    for row in rec.itertuples(index=False):
-        if row.label not in ["clear", "cloudy", "medium"]:
+    highlight_colors = {
+        "clear": "tab:green",
+        "medium": "tab:orange",
+        "cloudy": "tab:red",
+    }
+
+    highlight_order = ["clear", "medium", "cloudy"]
+
+    for label in highlight_order:
+        row_df = rec[rec["label"] == label]
+        if row_df.empty:
             continue
-        plt.scatter([row.P95_abs_ramp_kW], [row.E_day_kWh], s=120, label=f"{row.label} ({str(row.date.date())})")
+
+        row = row_df.iloc[0]
+        plt.scatter(
+            [row["P95_abs_ramp_kW"]],
+            [row["E_day_kWh"]],
+            s=140,
+            color=highlight_colors[label],
+            edgecolor="black",
+            linewidth=0.8,
+            label=f"{label} ({row['date'].date()})",
+            zorder=3,
+        )
 
     plt.xlabel("P95(|ΔP|) (kW per 5 min)")
     plt.ylabel("Energy in active window (kWh)")

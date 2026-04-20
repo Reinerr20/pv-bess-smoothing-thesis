@@ -11,9 +11,9 @@ os.makedirs(OUT_DIR, exist_ok=True)
 WINDOW_ORDER = {"10min": 10, "20min": 20, "30min": 30, "60min": 60}
 MARKERS = {"SMA": "o", "EMA": "^"}
 COLORS = {
-    "clear": "tab:blue",
+    "clear": "tab:green",
     "medium": "tab:orange",
-    "cloudy": "tab:green",
+    "cloudy": "tab:red",
 }
 
 
@@ -37,7 +37,9 @@ def prepare_combined() -> pd.DataFrame:
 
     combined = pd.concat([sma, ema], ignore_index=True)
     combined["window_order"] = combined["window_name"].map(WINDOW_ORDER)
-    combined = combined.sort_values(["label", "date", "method", "window_order"]).reset_index(drop=True)
+    DAY_ORDER = {"clear": 1, "medium": 2, "cloudy": 3}
+    combined["day_order"] = combined["label"].map(DAY_ORDER)
+    combined = combined.sort_values(["day_order", "date", "method", "window_order"]).reset_index(drop=True)
     return combined
 
 
@@ -71,8 +73,10 @@ def plot_tradeoff(combined: pd.DataFrame):
             g["throughput_kwh"],
             marker=MARKERS.get(method, "o"),
             color=COLORS.get(label, None),
-            s=55,
-            label=f"{label} – {method}",
+            edgecolor="black",
+            linewidth=0.5,
+            s=60,
+            label=f"{label} - {method}",
         )
 
         for _, r in g.iterrows():

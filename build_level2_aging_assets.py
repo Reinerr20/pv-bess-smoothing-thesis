@@ -425,21 +425,23 @@ def make_fig_4_11(df: pd.DataFrame) -> None:
 
                 color = color_map[method]
                 marker = METHOD_MARKERS[method]
+                line_style = "--" if scenario == "small" else "-"
 
-                # connector line tipis untuk bantu baca urutan horizon
+                # connector line
                 ax.plot(
                     g["throughput_act_kwh"],
                     g["damage_index"],
                     color=color,
-                    linewidth=1.0,
-                    alpha=0.35,
+                    linestyle=line_style,
+                    linewidth=1.2,
+                    alpha=0.45,
                     zorder=1,
                 )
 
                 # marker: hollow untuk small, filled untuk large
                 if scenario == "small":
                     face = "none"
-                    lw = 1.6
+                    lw = 1.8
                 else:
                     face = color
                     lw = 0.8
@@ -448,7 +450,7 @@ def make_fig_4_11(df: pd.DataFrame) -> None:
                     g["throughput_act_kwh"],
                     g["damage_index"],
                     marker=marker,
-                    s=70,
+                    s=75,
                     facecolors=face,
                     edgecolors=color,
                     linewidths=lw,
@@ -465,38 +467,85 @@ def make_fig_4_11(df: pd.DataFrame) -> None:
         else:
             ax.set_ylabel("")
 
-    # legend figure-level, cukup 2 blok
+    # legend method
     method_handles = [
-        Line2D([0], [0], marker="o", linestyle="", color=color_map["SMA"], markerfacecolor=color_map["SMA"], markersize=8, label="SMA"),
-        Line2D([0], [0], marker="^", linestyle="", color=color_map["EMA"], markerfacecolor=color_map["EMA"], markersize=8, label="EMA"),
+        Line2D(
+            [0], [0],
+            marker="o",
+            linestyle="",
+            color=color_map["SMA"],
+            markerfacecolor=color_map["SMA"],
+            markersize=8,
+            label="SMA",
+        ),
+        Line2D(
+            [0], [0],
+            marker="^",
+            linestyle="",
+            color=color_map["EMA"],
+            markerfacecolor=color_map["EMA"],
+            markersize=8,
+            label="EMA",
+        ),
     ]
 
+    # legend scenario
     scenario_handles = [
-        Line2D([0], [0], marker="o", linestyle="", color="black", markerfacecolor="none", markersize=8, label="Small BESS"),
-        Line2D([0], [0], marker="o", linestyle="", color="black", markerfacecolor="black", markersize=8, label="Large BESS"),
+        Line2D(
+            [0], [0],
+            marker="o",
+            linestyle="--",
+            color="black",
+            markerfacecolor="none",
+            markersize=8,
+            label="Small BESS",
+        ),
+        Line2D(
+            [0], [0],
+            marker="o",
+            linestyle="-",
+            color="black",
+            markerfacecolor="black",
+            markersize=8,
+            label="Large BESS",
+        ),
     ]
 
     leg1 = fig.legend(
         handles=method_handles,
         loc="lower center",
-        bbox_to_anchor=(0.40, -0.02),
+        bbox_to_anchor=(0.34, -0.065),
         ncol=2,
         frameon=False,
         title="Method",
+        title_fontsize=13,
+        fontsize=11,
+        handlelength=2.0,
+        columnspacing=1.6,
+        labelspacing=0.8,
+        borderpad=0.6,
     )
+    leg1.get_title().set_fontweight("bold")
     fig.add_artist(leg1)
 
-    fig.legend(
+    leg2 = fig.legend(
         handles=scenario_handles,
         loc="lower center",
-        bbox_to_anchor=(0.78, -0.02),
+        bbox_to_anchor=(0.77, -0.065),
         ncol=2,
         frameon=False,
         title="Scenario",
+        title_fontsize=13,
+        fontsize=11,
+        handlelength=2.0,
+        columnspacing=1.6,
+        labelspacing=0.8,
+        borderpad=0.6,
     )
+    leg2.get_title().set_fontweight("bold")
 
-    fig.suptitle("Damage index vs actual battery throughput", y=1.02)
-    fig.tight_layout(rect=(0, 0.06, 1, 1))
+    fig.suptitle("Damage index vs actual battery throughput by representative day", y=1.03)
+    fig.tight_layout(rect=(0, 0.12, 1, 1))
     fig.savefig(FIG_4_11, dpi=300, bbox_inches="tight")
     plt.close(fig)
 
